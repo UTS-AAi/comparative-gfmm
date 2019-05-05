@@ -46,7 +46,7 @@ except:
 from functionhelper.preprocessinghelper import load_dataset, string_to_boolean
 from functionhelper.drawinghelper import drawbox
 from functionhelper.hyperboxadjustment import is_overlap
-from GFMM.basebatchlearninggfmm import BaseBatchLearningGFMM
+from gfmm.basebatchlearninggfmm import BaseBatchLearningGFMM
 from functionhelper.membershipcalc import asym_similarity_one_many, membership_gfmm
 
 class AccelBatchGFMM(BaseBatchLearningGFMM):

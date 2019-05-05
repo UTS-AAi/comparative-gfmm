@@ -9,7 +9,6 @@ GFMM Predictor
 """
 
 import numpy as np
-import torch
 from functionhelper.membershipcalc import membership_gfmm
 from functionhelper.bunchdatatype import Bunch
 
@@ -61,8 +60,6 @@ def predict(V, W, classId, XlT, XuT, patClassIdTest, gama = 1, oper = 'min'):
 
         if bmax == 0:
             print('zero maximum membership value')                     # this is probably bad...
-
-#        misclass[i] = ~(np.any(classId[maxVind] == patClassIdTest[i]) | (patClassIdTest[i] == 0))
 
         if len(np.unique(classId[maxVind])) > 1:
             misclass[i] = True

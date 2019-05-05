@@ -8,8 +8,8 @@ Base class for batch learning GFMM
 """
 
 import numpy as np
-from GFMM.basegfmmclassifier import BaseGFMMClassifier
-from GFMM.classification import predict
+from gfmm.basegfmmclassifier import BaseGFMMClassifier
+from gfmm.classification import predict
 from functionhelper.hyperboxadjustment import hyperbox_overlap_test, hyperbox_contraction
 from functionhelper.membershipcalc import membership_gfmm
 

@@ -44,7 +44,7 @@ try:
 except:
     pass
 
-from GFMM.basebatchlearninggfmm import BaseBatchLearningGFMM
+from gfmm.basebatchlearninggfmm import BaseBatchLearningGFMM
 from functionhelper.membershipcalc import membership_gfmm
 from functionhelper.drawinghelper import drawbox
 from functionhelper.hyperboxadjustment import is_overlap

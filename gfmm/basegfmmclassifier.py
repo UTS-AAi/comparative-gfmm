@@ -246,9 +246,13 @@ class BaseGFMMClassifier(object):
         # pruning handling based on the validation results
         tmp_no_box = no_predicted_samples_hyperboxes.shape[0]
         accuracy_larger_half = np.zeros(tmp_no_box).astype(np.bool)
+        accuracy_larger_half_keep_nojoin = np.zeros(tmp_no_box).astype(np.bool)
         for i in range(tmp_no_box):
             if (no_predicted_samples_hyperboxes[i, 0] + no_predicted_samples_hyperboxes[i, 1] != 0) and no_predicted_samples_hyperboxes[i, 0] / (no_predicted_samples_hyperboxes[i, 0] + no_predicted_samples_hyperboxes[i, 1]) >= accuracy_threshold:
                 accuracy_larger_half[i] = True
+                accuracy_larger_half_keep_nojoin[i] = True
+            if (no_predicted_samples_hyperboxes[i, 0] + no_predicted_samples_hyperboxes[i, 1] == 0):
+                accuracy_larger_half_keep_nojoin[i] = True
         
         # keep one hyperbox for class prunned all
         current_classes = np.unique(self.classId)
@@ -259,8 +263,24 @@ class BaseGFMMClassifier(object):
                 id_kept = np.random.randint(len(pos))
                 # keep pos[id_kept]
                 accuracy_larger_half[pos[id_kept]] = True
-
-        # Pruning
-        self.V = self.V[accuracy_larger_half]
-        self.W = self.W[accuracy_larger_half]
-        self.classId = self.classId[accuracy_larger_half]
+        
+        V_prun_remove = self.V[accuracy_larger_half]
+        W_prun_remove = self.W[accuracy_larger_half]
+        classId_prun_remove = self.classId[accuracy_larger_half]
+        
+        W_prun_keep = self.W[accuracy_larger_half_keep_nojoin]
+        V_prun_keep = self.V[accuracy_larger_half_keep_nojoin]
+        classId_prun_keep = self.classId[accuracy_larger_half_keep_nojoin]
+        
+        result_prun_remove = predict(V_prun_remove, W_prun_remove, classId_prun_remove, XlT, XuT, patClassIdTest, self.gamma, self.oper)
+        result_prun_keep_nojoin = predict(V_prun_keep, W_prun_keep, classId_prun_keep, XlT, XuT, patClassIdTest, self.gamma, self.oper)
+        
+		# Pruning
+        if (result_prun_remove.summis <= result_prun_keep_nojoin.summis):
+            self.V = V_prun_remove
+            self.W = W_prun_remove
+            self.classId = classId_prun_remove
+        else:
+            self.V = V_prun_keep
+            self.W = W_prun_keep
+            self.classId = classId_prun_keep

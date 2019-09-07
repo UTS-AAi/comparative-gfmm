@@ -34,7 +34,9 @@ def predict(V, W, classId, XhT, patClassIdTest, gama = 1):
                           + mem              Hyperbox memberships
 
     """
-
+	if len(XhT.shape) == 1:
+        XhT = XhT.reshape(1, -1)
+    
     #initialization
     yX = XhT.shape[0]
     misclass = np.zeros(yX)
